@@ -1,5 +1,12 @@
 package org.example;
 
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+import java.io.IOException;
+import java.io.Reader;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -7,31 +14,36 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ReservationController {
+
+
     public static void main(String[] args) {
-        // Initial setups
-        Movie slamDunk = new Movie(1, "Slum Dunk");
-        Movie harryPotter = new Movie(2, "Harry Potter");
+        Movie slamDunk = null;
+        try {
+            SqlSession session = createSqlSession("SqlMapConfig.xml");
+            slamDunk = getMovieById(session, 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        Seat[][] seats = new Seat[3][3];
 
+        // TODO : 列ごとに座席数を変更できるようにする。
+        // TODO : シアターみたいなクラス / DB から引っ張ってこれるようにする。
+        List<List<Seat>> seats = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                seats[i][j] = new Seat(true);
+            List<Seat> horizontalRowSeats = new ArrayList<>();
+            for (int j = 0 ; j < 3 ; j++) {
+                horizontalRowSeats.add(new Seat(true));
             }
+            seats.add(horizontalRowSeats);
         }
 
         Screen screen1 = new Screen(1, LocalDate.of(2023, 1, 7), LocalTime.of(10, 0), slamDunk, seats);
-//        Screen screen2 = new Screen(2, LocalDate.of(2023,1,7), LocalTime.of(21,0),slamDunk, seats);
-//        Screen screen3 = new Screen(3, LocalDate.of(2023,1,9), LocalTime.of(12,0),harryPotter, seats);
-
-
         Scanner scanner = new Scanner(System.in);
-        // TODO : Screen を選択する処理、今回は screen1 で処理を進める。
 
-        //
+        // TODO : ID を動的に取得する。DB から。
         Reservation reservation = new Reservation(1);
-        int flag = 1;
-        while (flag == 1) {
+        boolean isReservationInputCompleted = false;
+        while (! isReservationInputCompleted) {
             // 座席の選択を促す
             System.out.println("下記より座席を選択してください");
             screen1.showVacantSeats();
@@ -58,28 +70,38 @@ public class ReservationController {
 
             ReservationDetail reservationDetail = new ReservationDetail(horizontalRow, verticalRow, audience);
             reservation.reservationDetails.add(reservationDetail);
-            screen1.makeSeatReservation(reservationDetail); 
+            screen1.makeSeatReservation(reservationDetail);
             System.out.println("予約内容に追加しました。");
             System.out.println(reservationDetail);
-            System.out.println("予約を継続する場合は 1、終了する場合は 0 を押してください。");
-            flag = scanner.nextInt();
+            System.out.println("予約を終了しますか？終了 : true、継続 : false");
+            isReservationInputCompleted = scanner.nextBoolean();
         }
 
         // TODO : 料金計算ロジック
-        System.out.println("下記予約内容で承りました。問題なければ 1、間違いがあれば 0 を押してください。");
+        System.out.println("下記予約内容で承りました。問題なければ true、間違いがあれば false を入力してください。");
         System.out.println(reservation);
 
-
-        int isOk = scanner.nextInt();
-        if (isOk == 1) {
+        boolean isReservationConfirmed = scanner.nextBoolean();
+        if (isReservationConfirmed) {
             System.out.println("予約を確定しました");
             System.out.println(reservation);
         }
-        if (isOk == 0) {
+        if (!isReservationConfirmed) {
             for (ReservationDetail reservationDetail : reservation.reservationDetails) {
                 screen1.rollbackSeatReservation(reservationDetail);
             }
             screen1.showVacantSeats();
         }
+    }
+
+    public static SqlSession createSqlSession(String xmlFilePath) throws IOException {
+        Reader reader = Resources.getResourceAsReader(xmlFilePath);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        return sqlSessionFactory.openSession();
+    }
+
+    public static Movie getMovieById(SqlSession session, int index) {
+        Movie movie = (Movie) session.selectOne("Movie.getById", index);
+        return movie;
     }
 }

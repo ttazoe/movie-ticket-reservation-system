@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a63d2ff3-a218-41ed-adc6-2635a7394ff0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Audience.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Reservation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/ReservationDetail.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Movie.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/SqlMapConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/setup.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ReservationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ReservationController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Screen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Screen.java" afterDir="false" />

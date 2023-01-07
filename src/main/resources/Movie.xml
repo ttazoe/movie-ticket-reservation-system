@@ -1,0 +1,39 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Use namespace FQDN to map Java class and xml -->
+<mapper namespace = "Movie">
+
+    <!-- parameterType = input/output format, there is int, etc options -->
+    <!-- Create operation -->
+    <insert id = "insert" parameterType = "Movie">
+        INSERT INTO movie (title) VALUES (#{title});
+
+        <selectKey keyProperty = "id" resultType = "int" order = "AFTER">
+            select last_insert_id() as id
+        </selectKey>
+    </insert>
+
+    <!-- Read operation -->
+    <resultMap id = "result" type = "Movie">
+        <result property = "id" column = "id"/>
+        <result property = "title" column = "title"/>
+    </resultMap>
+
+    <select id = "getAll" resultMap = "result">
+        SELECT * FROM movie;
+    </select>
+
+    <select id = "getById" parameterType = "int" resultMap = "result">
+        SELECT * FROM movie WHERE id = #{id};
+    </select>
+
+
+    <!-- Delete operation -->
+    <delete id = "deleteById" parameterType = "int">
+        DELETE from movie WHERE id = #{id};
+    </delete>
+
+
+</mapper>

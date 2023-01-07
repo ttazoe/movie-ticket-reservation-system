@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @Data
@@ -13,12 +15,12 @@ public class Screen {
     LocalDate date;
     LocalTime time;
     Movie movie;
-    Seat[][] seatMap = new Seat[3][3];
+    List<List<Seat>> seatMap;
 
     public void showVacantSeats(){
-        for (int horizontalRow = 0; horizontalRow < seatMap.length; horizontalRow++){
-            for (int verticalRow = 0; verticalRow < seatMap[horizontalRow].length; verticalRow++){
-                if (seatMap[horizontalRow][verticalRow].isVacant) {
+        for (int horizontalRow = 0; horizontalRow < seatMap.size(); horizontalRow++){
+            for (int verticalRow = 0; verticalRow < seatMap.get(horizontalRow).size(); verticalRow++){
+                if (seatMap.get(horizontalRow).get(verticalRow).isVacant) {
                     System.out.println("horizontalRow : " + horizontalRow + " verticalRow : " + verticalRow);
                 }
             }
@@ -26,10 +28,10 @@ public class Screen {
     }
 
     public void makeSeatReservation(ReservationDetail reservationDetail){
-        seatMap[reservationDetail.seatHorizontalIndex][reservationDetail.seatVerticalIndex].isVacant = false;
+        seatMap.get(reservationDetail.seatHorizontalIndex).get(reservationDetail.seatVerticalIndex).isVacant = false;
     }
 
     public void rollbackSeatReservation(ReservationDetail reservationDetail){
-        seatMap[reservationDetail.seatHorizontalIndex][reservationDetail.seatVerticalIndex].isVacant = true;
+        seatMap.get(reservationDetail.seatHorizontalIndex).get(reservationDetail.seatVerticalIndex).isVacant = true;
     }
 }
