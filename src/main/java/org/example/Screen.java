@@ -5,8 +5,6 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @AllArgsConstructor
 @Data
@@ -15,20 +13,23 @@ public class Screen {
     LocalDate date;
     LocalTime time;
     Movie movie;
-    Seat[][] seats = new Seat[3][3];
+    Seat[][] seatMap = new Seat[3][3];
 
     public void showVacantSeats(){
-        for (int horizontalRow = 0; horizontalRow < seats.length; horizontalRow++){
-            for (int verticalRow = 0; verticalRow < seats[horizontalRow].length; verticalRow++){
-                if (seats[horizontalRow][verticalRow].isVacant) {
+        for (int horizontalRow = 0; horizontalRow < seatMap.length; horizontalRow++){
+            for (int verticalRow = 0; verticalRow < seatMap[horizontalRow].length; verticalRow++){
+                if (seatMap[horizontalRow][verticalRow].isVacant) {
                     System.out.println("horizontalRow : " + horizontalRow + " verticalRow : " + verticalRow);
                 }
             }
         }
     }
 
-    public void makeSeatReservation(int horizontalRow, int verticalRow){
-        seats[horizontalRow][verticalRow].isVacant = false;
+    public void makeSeatReservation(ReservationDetail reservationDetail){
+        seatMap[reservationDetail.seatHorizontalIndex][reservationDetail.seatVerticalIndex].isVacant = false;
     }
 
+    public void rollbackSeatReservation(ReservationDetail reservationDetail){
+        seatMap[reservationDetail.seatHorizontalIndex][reservationDetail.seatVerticalIndex].isVacant = true;
+    }
 }

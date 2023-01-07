@@ -1,6 +1,5 @@
 package org.example;
 
-import java.sql.Array;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -30,9 +29,8 @@ public class ReservationController {
         // TODO : Screen を選択する処理、今回は screen1 で処理を進める。
 
         //
+        Reservation reservation = new Reservation(1);
         int flag = 1;
-        List<List<Integer>> reservationSeats = new ArrayList<>();
-
         while (flag == 1) {
             // 座席の選択を促す
             System.out.println("下記より座席を選択してください");
@@ -43,42 +41,45 @@ public class ReservationController {
             System.out.println("verticalRow : ");
             int verticalRow = scanner.nextInt();
 
-            System.out.println("選択された座席は下記でよろしいでしょうか。よければ 1、ちがければ 0 を押してください");
-            System.out.println("horizontalRow : " + horizontalRow + " verticalRow : " + verticalRow);
+//            System.out.println("お客様の名前を入力ください");
+//            String name = scanner.next();
+//
+//            System.out.println("お客様の年齢を入力ください");
+//            int age = scanner.nextInt();
+//
+//            System.out.println("シネマシチズン会員ですか？ true/false");
+//            boolean isCinemaCitizen = scanner.nextBoolean();
 
-            System.out.println("お客様の年齢を入力ください");
-            int age = scanner.nextInt();
+            String name = "tazoe";
+            int age = 33;
+            boolean isCinemaCitizen = true;
 
-            System.out.println("シネマシチズン会員ですか？ Yes = 1、No = 0");
-            boolean isCinemaCitizen = scanner.nextBoolean();
+            Audience audience = new Audience(name, age, isCinemaCitizen);
 
-            int isOk = scanner.nextInt();
-            if (isOk == 1) {
-                List<Integer> reservationSeat = new ArrayList<>();
-                reservationSeat.add(Integer.valueOf(horizontalRow));
-                reservationSeat.add(Integer.valueOf(verticalRow));
-                reservationSeats.add(reservationSeat);
-                screen1.makeSeatReservation(horizontalRow, verticalRow);
-            }
+            ReservationDetail reservationDetail = new ReservationDetail(horizontalRow, verticalRow, audience);
+            reservation.reservationDetails.add(reservationDetail);
+            screen1.makeSeatReservation(reservationDetail); 
+            System.out.println("予約内容に追加しました。");
+            System.out.println(reservationDetail);
             System.out.println("予約を継続する場合は 1、終了する場合は 0 を押してください。");
             flag = scanner.nextInt();
         }
 
-        // TODO : 各座席のお客様属性を選択
-
-
         // TODO : 料金計算ロジック
         System.out.println("下記予約内容で承りました。問題なければ 1、間違いがあれば 0 を押してください。");
+        System.out.println(reservation);
+
+
         int isOk = scanner.nextInt();
         if (isOk == 1) {
-            System.out.println("下記座席の予約を確定しました");
-            for (List<Integer> seat : reservationSeats) {
-                System.out.printf("horizontalRow : %d, verticalRow : %d\n", seat.get(0), seat.get(1));
-            }
-            // 料金に関する表示
+            System.out.println("予約を確定しました");
+            System.out.println(reservation);
         }
         if (isOk == 0) {
-            // TODO : Rollback
+            for (ReservationDetail reservationDetail : reservation.reservationDetails) {
+                screen1.rollbackSeatReservation(reservationDetail);
+            }
+            screen1.showVacantSeats();
         }
     }
 }
