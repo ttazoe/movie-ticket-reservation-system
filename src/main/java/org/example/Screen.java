@@ -15,7 +15,7 @@ public class Screen {
     LocalDate date;
     LocalTime time;
     Movie movie;
-    List<List<Seat>> seatMap;
+    List<List<Seat>> seatMap; // TODO : Theater Class を作ってそっちにデータと機能を移動させる。
 
     public void showVacantSeats(){
         for (int horizontalRow = 0; horizontalRow < seatMap.size(); horizontalRow++){

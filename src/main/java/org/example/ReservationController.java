@@ -17,14 +17,11 @@ public class ReservationController {
 
 
     public static void main(String[] args) {
-        Movie slamDunk = null;
-        try {
-            SqlSession session = createSqlSession("SqlMapConfig.xml");
-            slamDunk = getMovieById(session, 1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
+        // TODO : 予約する映画を選択できるようにする。
+        SqlSession session = createSqlSession("SqlMapConfig.xml");
+        List<Movie> movies = getAllMovie(session);
+        Movie slamDunk = getMovieById(session, 1);
 
         // TODO : 列ごとに座席数を変更できるようにする。
         // TODO : シアターみたいなクラス / DB から引っ張ってこれるようにする。
@@ -94,14 +91,23 @@ public class ReservationController {
         }
     }
 
-    public static SqlSession createSqlSession(String xmlFilePath) throws IOException {
-        Reader reader = Resources.getResourceAsReader(xmlFilePath);
-        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        return sqlSessionFactory.openSession();
+    public static SqlSession createSqlSession(String xmlFilePath) {
+        try (Reader reader = Resources.getResourceAsReader(xmlFilePath);) {
+            SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+            return sqlSessionFactory.openSession();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null; // TODO : 正しいエラー処理を実装する。Technical Vertification 側に反映する。
     }
 
     public static Movie getMovieById(SqlSession session, int index) {
         Movie movie = (Movie) session.selectOne("Movie.getById", index);
         return movie;
+    }
+
+    public static List<Movie> getAllMovie(SqlSession session) {
+        List<Movie> movies = session.selectList("Movie.getAll");
+        return movies;
     }
 }
