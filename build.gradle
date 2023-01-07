@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
+    // AssertJ
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.23.1'
+
+    // Jackson
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.0'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.0'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.13.0'
+
+    // Lombok
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+
+    // MyBatis
+    implementation group: 'org.mybatis', name: 'mybatis', version: '3.5.11'
+
+    // H2 DB
+    testImplementation group: 'com.h2database', name: 'h2', version: '2.1.214'
+
+    // MySQL
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.31'
+
+}
+
+test {
+    useJUnitPlatform()
+}
